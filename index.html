@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechWorld - Electronics & Gadgets | Task WD-EC-003</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            darkBlue: '#0A2647',
+            techBlue: '#00B4D8',
+            accentLight: '#F0F8FF'
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
+
+  <!-- Header Section -->
+  <header class="sticky top-0 z-40 bg-darkBlue text-white shadow-lg">
+    <!-- Top info bar -->
+    <div class="bg-slate-900 text-xs py-1.5 px-4">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <span><i class="fa-solid fa-award text-techBlue mr-1"></i> Data Alcott Systems - Internship Project (WD-EC-003)[cite: 10]</span>
+        <div class="flex items-center space-x-4">
+          <span><i class="fa-solid fa-phone mr-1"></i> 9600095045</span>
+          <span><i class="fa-solid fa-envelope mr-1"></i> mail@freeinternships.in</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <!-- Logo -->
+      <a href="#" onclick="showSection('home')" class="flex items-center gap-2 text-2xl font-black text-white tracking-wider">
+        <i class="fa-solid fa-laptop text-techBlue text-3xl"></i>
+        <span>Tech<span class="text-techBlue">World</span></span>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="flex-1 max-w-xl relative hidden md:block">
+        <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Search smartphones, laptops, audio devices..." class="w-full pl-10 pr-4 py-2 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-techBlue text-sm shadow-inner">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400"></i>
+      </div>
+
+      <!-- User Actions -->
+      <div class="flex items-center space-x-4">
+        <!-- Wishlist -->
+        <button onclick="showSection('wishlist')" class="relative hover:text-techBlue p-2 transition">
+          <i class="fa-solid fa-heart text-xl"></i>
+          <span id="wishlistCount" class="absolute -top-1 -right-1 bg-techBlue text-darkBlue font-bold text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+        </button>
+
+        <!-- Cart -->
+        <button onclick="showSection('cart')" class="relative hover:text-techBlue p-2 transition">
+          <i class="fa-solid fa-cart-shopping text-xl"></i>
+          <span id="cartCount" class="absolute -top-1 -right-1 bg-techBlue text-darkBlue font-bold text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+        </button>
+
+        <!-- User Account -->
+        <button onclick="showSection('account')" class="hover:text-techBlue p-2 transition">
+          <i class="fa-solid fa-user text-xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Category Nav Links -->
+    <nav class="bg-[#143d63] border-t border-slate-700 text-sm overflow-x-auto">
+      <div class="max-w-7xl mx-auto px-4 flex space-x-6 whitespace-nowrap py-2.5">
+        <button onclick="filterCategory('all')" class="hover:text-techBlue font-medium">All Gadgets</button>
+        <button onclick="filterCategory('smartphones')" class="hover:text-techBlue font-medium"><i class="fa-solid fa-mobile-screen mr-1"></i> Smartphones</button>
+        <button onclick="filterCategory('laptops')" class="hover:text-techBlue font-medium"><i class="fa-solid fa-laptop mr-1"></i> Laptops & Tablets</button>
+        <button onclick="filterCategory('audio')" class="hover:text-techBlue font-medium"><i class="fa-solid fa-headphones mr-1"></i> Audio & Wearables</button>
+        <button onclick="filterCategory('accessories')" class="hover:text-techBlue font-medium"><i class="fa-solid fa-plug mr-1"></i> Accessories</button>
+        <button onclick="showSection('about')" class="hover:text-techBlue font-medium ml-auto"><i class="fa-solid fa-circle-info mr-1"></i> About Us</button>
+        <button onclick="showSection('contact')" class="hover:text-techBlue font-medium"><i class="fa-solid fa-headset mr-1"></i> Contact</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Mobile Search Bar -->
+  <div class="p-3 bg-gray-200 md:hidden">
+    <div class="relative">
+      <input type="text" id="searchInputMobile" oninput="handleSearchMobile()" placeholder="Search gadgets..." class="w-full pl-10 pr-4 py-2 rounded-lg text-gray-900 focus:outline-none text-sm">
+      <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400"></i>
+    </div>
+  </div>
+
+  <!-- Main Dynamic View Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
+
+    <!-- HOME / PRODUCT CATALOG VIEW -->
+    <section id="homeView" class="space-y-8">
+      <!-- Hero Banner -->
+      <div class="relative bg-darkBlue text-white rounded-2xl overflow-hidden shadow-xl min-h-[320px] flex items-center">
+        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80" alt="Electronics Hero" class="absolute inset-0 w-full h-full object-cover opacity-20">
+        <div class="relative p-6 md:p-12 max-w-2xl space-y-4">
+          <span class="bg-techBlue text-darkBlue font-bold text-xs uppercase tracking-widest px-3 py-1 rounded-full">Next-Gen Tech Store</span>
+          <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">Innovate Your Digital Lifestyle</h1>
+          <p class="text-gray-300 text-sm md:text-base">Explore cutting-edge smartphones, high-performance laptops, immersive audio devices, and smart accessories at unbeatable prices.</p>
+          <div class="flex flex-wrap gap-3">
+            <button onclick="filterCategory('all')" class="bg-techBlue hover:bg-cyan-500 text-darkBlue font-bold px-6 py-3 rounded-lg shadow transition">Shop Latest Tech</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Category Grid[cite: 9] -->
+      <div>
+        <h2 class="text-xl font-extrabold text-darkBlue mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-layer-group text-techBlue"></i> Product Categories
+        </h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div onclick="filterCategory('smartphones')" class="cursor-pointer bg-white p-4 rounded-xl shadow-sm border hover:shadow-md transition flex flex-col items-center text-center group">
+            <div class="w-12 h-12 bg-sky-100 rounded-full flex items-center justify-center text-techBlue text-xl mb-2 group-hover:scale-110 transition">
+              <i class="fa-solid fa-mobile-screen"></i>
+            </div>
+            <h3 class="font-bold text-sm text-darkBlue">Smartphones</h3>
+            <p class="text-xs text-gray-500">iPhone, Galaxy, Pixel</p>
+          </div>
+          <div onclick="filterCategory('laptops')" class="cursor-pointer bg-white p-4 rounded-xl shadow-sm border hover:shadow-md transition flex flex-col items-center text-center group">
+            <div class="w-12 h-12 bg-sky-100 rounded-full flex items-center justify-center text-techBlue text-xl mb-2 group-hover:scale-110 transition">
+              <i class="fa-solid fa-laptop"></i>
+            </div>
+            <h3 class="font-bold text-sm text-darkBlue">Laptops & Tablets</h3>
+            <p class="text-xs text-gray-500">MacBook, XPS, iPad</p>
+          </div>
+          <div onclick="filterCategory('audio')" class="cursor-pointer bg-white p-4 rounded-xl shadow-sm border hover:shadow-md transition flex flex-col items-center text-center group">
+            <div class="w-12 h-12 bg-sky-100 rounded-full flex items-center justify-center text-techBlue text-xl mb-2 group-hover:scale-110 transition">
+              <i class="fa-solid fa-headphones"></i>
+            </div>
+            <h3 class="font-bold text-sm text-darkBlue">Audio & Wearables</h3>
+            <p class="text-xs text-gray-500">Headphones, Watches</p>
+          </div>
+          <div onclick="filterCategory('accessories')" class="cursor-pointer bg-white p-4 rounded-xl shadow-sm border hover:shadow-md transition flex flex-col items-center text-center group">
+            <div class="w-12 h-12 bg-sky-100 rounded-full flex items-center justify-center text-techBlue text-xl mb-2 group-hover:scale-110 transition">
+              <i class="fa-solid fa-plug"></i>
+            </div>
+            <h3 class="font-bold text-sm text-darkBlue">Accessories</h3>
+            <p class="text-xs text-gray-500">Chargers, Power Banks</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Filter / Header Info Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-4 border-b pb-4">
+        <div>
+          <h2 id="currentCategoryTitle" class="text-2xl font-black text-darkBlue">All Electronics & Gadgets</h2>
+          <p id="productCountText" class="text-xs text-gray-500">Showing all items</p>
+        </div>
+        
+        <div class="flex items-center gap-2">
+          <label class="text-xs font-semibold text-gray-600">Sort By:</label>
+          <select id="sortSelect" onchange="sortProducts()" class="text-xs border rounded p-2 focus:ring-1 focus:ring-techBlue">
+            <option value="featured">Featured</option>
+            <option value="low-high">Price: Low to High</option>
+            <option value="high-low">Price: High to Low</option>
+            <option value="rating">Highest Rated</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- SHOPPING CART VIEW -->
+    <section id="cartView" class="hidden space-y-6">
+      <h2 class="text-2xl font-black text-darkBlue border-b pb-3"><i class="fa-solid fa-cart-shopping text-techBlue mr-2"></i> Shopping Cart</h2>
+      
+      <div id="cartEmptyState" class="hidden text-center py-16 bg-white rounded-xl shadow-sm border">
+        <i class="fa-solid fa-basket-shopping text-6xl text-gray-300 mb-4"></i>
+        <h3 class="text-xl font-bold text-gray-700">Your Cart is Empty</h3>
+        <p class="text-xs text-gray-500 mt-1 mb-6">Explore our store and add items to your cart.</p>
+        <button onclick="showSection('home')" class="bg-darkBlue text-white font-bold px-6 py-2.5 rounded-lg hover:bg-slate-800 transition">Start Shopping</button>
+      </div>
+
+      <div id="cartContent" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-4" id="cartItemsContainer"></div>
+        <div class="bg-white p-6 rounded-xl border shadow-sm h-fit space-y-4">
+          <h3 class="font-bold text-lg text-darkBlue border-b pb-2">Order Summary</h3>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-gray-600">Subtotal</span>
+              <span id="summarySubtotal" class="font-semibold">$0.00</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Shipping</span>
+              <span class="text-green-600 font-semibold">FREE</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Estimated Tax (5%)</span>
+              <span id="summaryTax" class="font-semibold">$0.00</span>
+            </div>
+            <div class="border-t pt-2 flex justify-between text-base font-bold text-darkBlue">
+              <span>Total</span>
+              <span id="summaryTotal" class="text-techBlue">$0.00</span>
+            </div>
+          </div>
+          <button onclick="showSection('checkout')" class="w-full bg-techBlue hover:bg-cyan-500 text-darkBlue font-bold py-3 rounded-lg shadow transition flex items-center justify-center gap-2">
+            <span>Proceed to Checkout</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHECKOUT VIEW -->
+    <section id="checkoutView" class="hidden space-y-6 max-w-4xl mx-auto">
+      <h2 class="text-2xl font-black text-darkBlue border-b pb-3"><i class="fa-solid fa-shield-halved text-techBlue mr-2"></i> Secure Checkout</h2>
+      
+      <form id="checkoutForm" onsubmit="handleCheckoutSubmit(event)" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-white p-6 rounded-xl border shadow-sm space-y-4">
+          <h3 class="font-bold text-base text-darkBlue mb-2"><i class="fa-solid fa-truck mr-1"></i> Shipping Address</h3>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">First Name</label>
+              <input type="text" required class="w-full border p-2 rounded text-sm focus:ring-1 focus:ring-techBlue" placeholder="Alex">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Last Name</label>
+              <input type="text" required class="w-full border p-2 rounded text-sm focus:ring-1 focus:ring-techBlue" placeholder="Smith">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Email Address</label>
+            <input type="email" required class="w-full border p-2 rounded text-sm focus:ring-1 focus:ring-techBlue" placeholder="alex@example.com">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Street Address</label>
+            <input type="text" required class="w-full border p-2 rounded text-sm focus:ring-1 focus:ring-techBlue" placeholder="456 Tech Street">
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">City</label>
+              <input type="text" required class="w-full border p-2 rounded text-sm focus:ring-1 focus:ring-techBlue" placeholder="Chennai">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Postal Code</label>
+              <input type="text" required class="w-full border p-2 rounded text-sm focus:ring-1 focus:ring-techBlue" placeholder="600001">
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-6">
+          <div class="bg-white p-6 rounded-xl border shadow-sm space-y-4">
+            <h3 class="font-bold text-base text-darkBlue mb-2"><i class="fa-solid fa-credit-card mr-1"></i> Payment Method</h3>
+            <div class="space-y-2">
+              <label class="flex items-center gap-3 border p-3 rounded cursor-pointer hover:bg-gray-50">
+                <input type="radio" name="payment" value="card" checked class="text-techBlue">
+                <span class="text-sm font-medium">Credit / Debit Card</span>
+              </label>
+              <label class="flex items-center gap-3 border p-3 rounded cursor-pointer hover:bg-gray-50">
+                <input type="radio" name="payment" value="cod" class="text-techBlue">
+                <span class="text-sm font-medium">Cash on Delivery</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="bg-sky-50 p-6 rounded-xl border border-sky-100 space-y-3">
+            <h4 class="font-bold text-sm text-darkBlue">Total Amount Payable</h4>
+            <div class="flex justify-between items-center text-xl font-extrabold text-darkBlue">
+              <span>Total:</span>
+              <span id="checkoutTotal" class="text-techBlue">$0.00</span>
+            </div>
+            <button type="submit" class="w-full bg-techBlue hover:bg-cyan-500 text-darkBlue font-bold py-3 rounded-lg shadow transition">Place Order</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- WISHLIST VIEW -->
+    <section id="wishlistView" class="hidden space-y-6">
+      <h2 class="text-2xl font-black text-darkBlue border-b pb-3"><i class="fa-solid fa-heart text-techBlue mr-2"></i> Saved Wishlist</h2>
+      <div id="wishlistContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+    </section>
+
+    <!-- USER ACCOUNT VIEW -->
+    <section id="accountView" class="hidden space-y-6">
+      <h2 class="text-2xl font-black text-darkBlue border-b pb-3"><i class="fa-solid fa-user-circle text-techBlue mr-2"></i> User Account & Orders</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-xl border shadow-sm space-y-3">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-darkBlue text-techBlue font-bold flex items-center justify-center text-xl">TW</div>
+            <div>
+              <h3 class="font-bold text-gray-800">Intern Student</h3>
+              <p class="text-xs text-gray-500">student@freeinternships.in</p>
+            </div>
+          </div>
+          <div class="pt-3 border-t text-xs text-gray-600 space-y-1">
+            <p><strong>Task ID:</strong> WD-EC-003[cite: 10]</p>
+            <p><strong>Location:</strong> Chennai, India[cite: 10]</p>
+            <p><strong>Status:</strong> Active Internship</p>
+          </div>
+        </div>
+
+        <div class="md:col-span-2 bg-white p-6 rounded-xl border shadow-sm space-y-4">
+          <h3 class="font-bold text-darkBlue border-b pb-2"><i class="fa-solid fa-box mr-1"></i> Simulated Order History</h3>
+          <div id="orderHistoryContainer" class="space-y-3 text-sm"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT US VIEW -->
+    <section id="aboutView" class="hidden space-y-6 max-w-4xl mx-auto">
+      <div class="bg-white p-8 rounded-xl border shadow-sm space-y-4">
+        <h2 class="text-3xl font-black text-darkBlue"><i class="fa-solid fa-laptop text-techBlue mr-2"></i> About TechWorld</h2>
+        <p class="text-sm text-gray-600 leading-relaxed">
+          TechWorld is a comprehensive online electronics and gadgets store offering smartphones, laptops, audio devices, smartwatches, and tech accessories[cite: 10]. Built as part of Data Alcott Systems Free Web Development Internship Online (Task ID: WD-EC-003)[cite: 10].
+        </p>
+      </div>
+    </section>
+
+    <!-- CONTACT VIEW -->
+    <section id="contactView" class="hidden space-y-6 max-w-2xl mx-auto">
+      <div class="bg-white p-8 rounded-xl border shadow-sm space-y-4">
+        <h2 class="text-2xl font-black text-darkBlue mb-2"><i class="fa-solid fa-headset text-techBlue mr-2"></i> Contact Us</h2>
+        <div class="space-y-2 text-sm text-gray-600">
+          <p><i class="fa-solid fa-building mr-2 text-darkBlue"></i> <strong>Company:</strong> Data Alcott Systems[cite: 10]</p>
+          <p><i class="fa-solid fa-globe mr-2 text-darkBlue"></i> <strong>Website:</strong> www.freeinternships.in[cite: 10]</p>
+          <p><i class="fa-solid fa-phone mr-2 text-darkBlue"></i> <strong>Phone:</strong> 9600095045</p>
+          <p><i class="fa-solid fa-envelope mr-2 text-darkBlue"></i> <strong>Email:</strong> mail@freeinternships.in</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Product Detail Modal -->
+  <div id="productDetailModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-6 relative overflow-y-auto max-h-[90vh]">
+      <button onclick="closeProductModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+      <div id="modalContent" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 bg-darkBlue text-white px-5 py-3 rounded-lg shadow-xl translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-3">
+    <i id="toastIcon" class="fa-solid fa-circle-check text-techBlue"></i>
+    <span id="toastMsg" class="text-sm font-medium">Notification</span>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-darkBlue text-gray-400 text-xs py-8 border-t border-slate-800 mt-12">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div>
+        <div class="text-white font-black text-lg mb-2"><i class="fa-solid fa-laptop text-techBlue"></i> TECHWORLD</div>
+        <p class="leading-relaxed">Simulated electronics store built for Data Alcott Systems Web Development Internship online submission (Task ID: WD-EC-003)[cite: 10].</p>
+      </div>
+      <div>
+        <h4 class="text-white font-bold mb-2">Task Details</h4>
+        <p>Task ID: <strong>WD-EC-003</strong>[cite: 10]</p>
+        <p>Domain: E-Commerce (Electronics)[cite: 10]</p>
+        <p>Location: Work From Home[cite: 10]</p>
+      </div>
+      <div>
+        <h4 class="text-white font-bold mb-2">Tech Stack</h4>
+        <p>HTML5, Tailwind CSS, JavaScript (ES6)</p>
+        <p class="mt-2 text-gray-500">&copy; 2026 TechWorld Project.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
